@@ -9,6 +9,7 @@ import Button from "#components/Button";
 import Checkbox from "#components/Checkbox";
 import Typography from "#components/Typography";
 import classNames from "#utils/classNames";
+import toast from "#utils/toast";
 import styles from "./index.module.scss";
 
 export interface TodoItemProps {
@@ -28,7 +29,13 @@ function TodoItem({ data }: TodoItemProps) {
                 onChange={async () => {
                     const nextState = !done;
                     setDone(nextState);
-                    modifyCompleteStateFromTodo(data._id, !done);
+
+                    try {
+                        await modifyCompleteStateFromTodo(data._id, !done);
+                    } catch {
+                        toast("상태 변경에 실패했습니다");
+                        setDone(!nextState);
+                    }
                 }}
             />
             <Typography component="p" fontWeight={500}>
@@ -67,8 +74,12 @@ function TodoItem({ data }: TodoItemProps) {
                     className={cx("__button", "--delete")}
                     variant="text"
                     size="small"
-                    onClick={() => {
-                        removeTodo(data._id);
+                    onClick={async () => {
+                        try {
+                            await removeTodo(data._id);
+                        } catch {
+                            toast("삭제에 실패했습니다");
+                        }
                     }}
                 >
                     <Typography variant="c2">Delete</Typography>
