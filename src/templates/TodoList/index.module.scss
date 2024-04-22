@@ -1,0 +1,3 @@
+.todo-list {
+    width: clamp(0px, 100%, map-get($container-width, "small"));
+}

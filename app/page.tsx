@@ -1,5 +1,6 @@
 import { getTodoList } from "#db/todo";
 import TodoForm from "#templates/TodoForm";
+import TodoList from "#templates/TodoList";
 import classNames from "#utils/classNames";
 import styles from "./page.module.scss";
 
@@ -11,11 +12,7 @@ export default async function Home() {
     return (
         <main className={cx("main")}>
             <TodoForm />
-            <ul>
-                {data.todos?.map((todo) => (
-                    <div key={todo._id}>{todo.title}</div>
-                ))}
-            </ul>
+            <TodoList todos={data?.todos} />
         </main>
     );
 }
