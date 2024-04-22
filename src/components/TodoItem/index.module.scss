@@ -1,2 +1,12 @@
 .todo-item {
+    display: flex;
+    padding: 0.5rem 1rem;
+    align-items: center;
+    border-radius: 2rem;
+    background-color: color(grayscale, 100);
+
+    &__description {
+        margin-left: 0.25rem;
+        margin-right: auto;
+    }
 }

@@ -1,3 +1,9 @@
 .todo-list {
     width: clamp(0px, 100%, map-get($container-width, "small"));
+
+    ul {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
 }
