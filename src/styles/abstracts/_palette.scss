@@ -107,8 +107,8 @@ $sepia-palette: (
 );
 
 $container-width: (
-    large: 1140px,
-    small: 880px,
+    large: 800px,
+    small: 480px,
 );
 
 @function get-color($palette, $key, $sub-key: null) {
