@@ -1,7 +1,9 @@
 "use server";
 
-import { createTodo, updateTodo } from "#db/todo";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
+import { createTodo, updateTodo } from "#db/todo";
+import { TODO_API_TAG } from "#constants";
 
 const todoSchema = z.object({
     title: z.string(),
@@ -35,8 +37,10 @@ export async function submitTodo(formData: FormData) {
 
     if (id) {
         await updateTodo(data);
+        revalidateTag(TODO_API_TAG);
         return;
     }
 
     await createTodo(data);
+    revalidateTag(TODO_API_TAG);
 }
