@@ -22,9 +22,21 @@ function TodoList({ todos = [] }: TodoListProps) {
                 Your Todo
             </Typography>
             <ul>
-                {todos.map((todo) => (
-                    <TodoItem key={todo._id} data={todo} />
-                ))}
+                {todos
+                    .sort((a, b) => {
+                        if (a.priority === b.priority) {
+                            return 0;
+                        }
+
+                        if (a.priority > b.priority) {
+                            return -1;
+                        }
+
+                        return 1;
+                    })
+                    .map((todo) => (
+                        <TodoItem key={todo._id} data={todo} />
+                    ))}
             </ul>
         </div>
     );

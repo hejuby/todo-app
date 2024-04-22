@@ -37,7 +37,15 @@ function TodoForm() {
                 label="Description"
             />
             <Input name="endDate" type="date" label="Due" />
-            <Input type="hidden" name="_id" />
+            <Input
+                label="Priority"
+                type="number"
+                name="priority"
+                min="0"
+                max="5"
+                step="1"
+            />
+            <Input type="hidden" name="_id" hidden />
             <Button type="submit">Add</Button>
         </form>
     );

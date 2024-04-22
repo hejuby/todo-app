@@ -21,7 +21,7 @@ export async function submitTodo(formData: FormData) {
             ? new Date(formData.get("endDate")!.toString())
             : undefined,
         _id: formData.get("_id"),
-        priority: 0,
+        priority: Number(formData.get("priority") || 0),
     });
 
     console.log(formData);
