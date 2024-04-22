@@ -7,6 +7,7 @@ const todoSchema = z.object({
     title: z.string(),
     description: z.string().optional(),
     _id: z.string().optional(),
+    endDate: z.date().optional(),
     priority: z.number(),
 });
 
@@ -14,6 +15,9 @@ export async function submitTodo(formData: FormData) {
     const validatedFields = todoSchema.safeParse({
         title: formData.get("title"),
         description: formData.get("description"),
+        endDate: formData.get("endDate")
+            ? new Date(formData.get("endDate")!.toString())
+            : undefined,
         _id: formData.get("_id"),
         priority: 0,
     });
