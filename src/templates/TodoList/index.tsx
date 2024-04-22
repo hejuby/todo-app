@@ -1,5 +1,6 @@
-import Typography from "#components/Typography";
 import { TodoDocument } from "#models/Todo";
+import TodoItem from "#components/TodoItem";
+import Typography from "#components/Typography";
 import classNames from "#utils/classNames";
 import styles from "./index.module.scss";
 
@@ -22,7 +23,7 @@ function TodoList({ todos = [] }: TodoListProps) {
             </Typography>
             <ul>
                 {todos.map((todo) => (
-                    <li key={todo._id}>{todo.title}</li>
+                    <TodoItem key={todo._id} data={todo} />
                 ))}
             </ul>
         </div>
