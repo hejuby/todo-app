@@ -1,0 +1,20 @@
+services:
+    todo-mongo:
+        image: mongo:${MONGO_TAG}
+        restart: always
+        container_name: todo-database
+        ports:
+            - ${MONGO_PORT}:27017
+        networks:
+            internal_network:
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+            - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+        volumes:
+            - ./db:/data/db
+            - ./config:/data/configdb
+
+networks:
+    app_network:
+        external: true
+    internal_network:
