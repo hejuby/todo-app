@@ -17,7 +17,7 @@ function Checkbox({
     children,
 }: CheckboxProps) {
     return (
-        <label className={cx(className, "checkbox")}>
+        <label className={cx("", { className })}>
             <input
                 type="checkbox"
                 className={cx("__input")}
