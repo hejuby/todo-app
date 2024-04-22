@@ -1,0 +1,38 @@
+.checkbox {
+    $self: &;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    &__input {
+        position: absolute;
+        opacity: 0;
+
+        &:focus-visible ~ #{$self}__icon {
+            outline: 2px solid color(theme);
+        }
+
+        &:checked ~ #{$self}__icon > svg {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    &__icon {
+        display: inline-flex;
+        margin-right: 8px;
+        padding: 0.2rem;
+        background-color: color(grayscale, 200);
+        flex-shrink: 0;
+        border-radius: 50%;
+
+        > svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            fill: color(grayscale, 800);
+            opacity: 0;
+            transform: scale(0);
+            transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+        }
+    }
+}

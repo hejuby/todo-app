@@ -39,3 +39,10 @@ export async function removeTodo(id: string) {
     await deleteTodo(id);
     revalidateTag(TODO_API_TAG);
 }
+
+export async function modifyCompleteStateFromTodo(
+    id: string,
+    completed: boolean
+) {
+    await updateTodo({ _id: id, completed });
+}

@@ -1,13 +1,15 @@
 "use client";
 
+import Link from "next/link";
+import { useState } from "react";
 import { formatDate } from "date-fns";
-import { removeTodo } from "app/actions";
+import { modifyCompleteStateFromTodo, removeTodo } from "app/actions";
 import { TodoDocument } from "#models/Todo";
 import Button from "#components/Button";
+import Checkbox from "#components/Checkbox";
 import Typography from "#components/Typography";
 import classNames from "#utils/classNames";
 import styles from "./index.module.scss";
-import Link from "next/link";
 
 export interface TodoItemProps {
     data: TodoDocument;
@@ -17,9 +19,18 @@ const cx = classNames(styles, "todo-item");
 
 function TodoItem({ data }: TodoItemProps) {
     const endDate = data.endDate ? new Date(data.endDate) : null;
+    const [done, setDone] = useState(!!data.completed);
 
     return (
         <li className={cx()}>
+            <Checkbox
+                checked={done}
+                onChange={async () => {
+                    const nextState = !done;
+                    setDone(nextState);
+                    modifyCompleteStateFromTodo(data._id, !done);
+                }}
+            />
             <Typography component="p" fontWeight={500}>
                 {data.title}
             </Typography>

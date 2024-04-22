@@ -68,9 +68,11 @@ export async function getTodo(id: string) {
 export async function updateTodo({
     _id: id,
     ...data
-}: Omit<TodoDocument, "createdAt" | "updatedAt" | "_id"> & {
-    _id?: string;
-}) {
+}: Partial<
+    Omit<TodoDocument, "createdAt" | "updatedAt" | "_id"> & {
+        _id?: string;
+    }
+>) {
     try {
         await connectDB();
 
