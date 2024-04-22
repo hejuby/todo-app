@@ -52,7 +52,7 @@ export async function getTodo(id: string) {
             return { error: "Todo not found" };
         }
 
-        const todo = await Todo.findById(id).lean().exec();
+        const todo = await Todo.findById<TodoDocument>(id);
         if (todo) {
             return {
                 todo,

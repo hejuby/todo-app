@@ -2,7 +2,7 @@
 
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
-import { createTodo, updateTodo } from "#db/todo";
+import { createTodo, deleteTodo, updateTodo } from "#db/todo";
 import { TODO_API_TAG } from "#constants";
 
 const todoSchema = z.object({
@@ -13,18 +13,8 @@ const todoSchema = z.object({
     priority: z.number(),
 });
 
-export async function submitTodo(formData: FormData) {
-    const validatedFields = todoSchema.safeParse({
-        title: formData.get("title"),
-        description: formData.get("description"),
-        endDate: formData.get("endDate")
-            ? new Date(formData.get("endDate")!.toString())
-            : undefined,
-        _id: formData.get("_id"),
-        priority: Number(formData.get("priority") || 0),
-    });
-
-    console.log(formData);
+export async function submitTodo(formData: z.infer<typeof todoSchema>) {
+    const validatedFields = todoSchema.safeParse(formData);
 
     if (!validatedFields.success) {
         console.log("FAILED", validatedFields.error.flatten().fieldErrors);
@@ -36,11 +26,16 @@ export async function submitTodo(formData: FormData) {
     const { _id: id, ...data } = validatedFields.data;
 
     if (id) {
-        await updateTodo(data);
+        await updateTodo({ _id: id, ...data });
         revalidateTag(TODO_API_TAG);
         return;
     }
 
     await createTodo(data);
+    revalidateTag(TODO_API_TAG);
+}
+
+export async function removeTodo(id: string) {
+    await deleteTodo(id);
     revalidateTag(TODO_API_TAG);
 }
