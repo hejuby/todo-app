@@ -9,8 +9,8 @@ declare global {
 
 const MONGODB_URI = `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/`;
 
-if (!MONGODB_URI || MONGODB_URI.length === 0) {
-    throw new Error("Please add your MongoDB URI to .env.local");
+if (!process.env.MONGO_HOST || !process.env.MONGO_PORT) {
+    throw new Error("Please add your MongoDB URI to .env file");
 }
 
 let cached = global.mongoose;
