@@ -6,6 +6,35 @@
 - Next.js
 - MongoDB
 - sass
+- playwright
+- Docker
+
+## 프로젝트 실행
+
+```bash
+bun install
+```
+
+package manager로 [`bun`](https://bun.sh/)을 사용합니다.\
+만약 설치되어 있지 않다면 설치 후, `bun install`로 의존성을 설치해 주세요.
+
+```bash
+cp .env.example .env
+```
+
+다음 위 명령어를 통해 `.env.example` 파일을 `.env` 파일로 복사하거나, 해당 파일의 내용을 참고하여 `.env` 파일을 작성합니다.
+
+```bash
+docker compose up -d
+```
+
+위 명령어를 통해 MongoDB 컨테이너를 실행시킵니다.
+
+```bash
+bun dev
+```
+
+마지막으로 위 명령어를 통해 개발 서버를 기동시킬 수 있습니다.
 
 ## Screenshots
 
@@ -28,3 +57,13 @@
 - 마찬가지로 Next.js의 actions를 통해 mutation을 진행합니다.
 - `Edit`을 클릭하면 상단의 Form이 출력되는 새로운 페이지로 이동합니다.
 - `Delete`을 클릭하면 해당 Todo를 제거하고 revalidate를 수행합니다.
+
+## 테스트 코드 실행
+
+[`playwright`](https://playwright.dev/)을 통한 테스트 코드가 작성되어 있습니다.
+
+```bash
+bunx playwright install
+```
+
+위 명령어를 통해 `playwright`을 설치한 뒤, `bun test:e2e`를 입력하면 e2e 테스트를 수행할 수 있습니다.
