@@ -1,4 +1,4 @@
-import Todo from "#models/Todo";
+import Todo, { TodoDocument } from "#models/Todo";
 import connectDB from "./connect";
 
 interface TodoFilter {
@@ -14,8 +14,7 @@ export async function getTodoList(filter: TodoFilter = {}) {
         const limit = filter.limit ?? 10;
         const skip = (page - 1) * limit;
 
-        const todos = await Todo.find().skip(skip).limit(limit).lean().exec();
-
+        const todos = await Todo.find<TodoDocument>().skip(skip).limit(limit);
         const results = todos.length;
 
         return {
