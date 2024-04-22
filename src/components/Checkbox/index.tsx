@@ -15,6 +15,7 @@ function Checkbox({
     onChange,
     label,
     children,
+    ...props
 }: CheckboxProps) {
     return (
         <label className={cx("", { className })}>
@@ -24,6 +25,7 @@ function Checkbox({
                 name={name}
                 checked={checked}
                 onChange={onChange}
+                {...props}
             />
             <div className={cx("__icon")}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">

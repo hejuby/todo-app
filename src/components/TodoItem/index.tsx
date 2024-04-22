@@ -37,6 +37,7 @@ function TodoItem({ data }: TodoItemProps) {
                         setDone(!nextState);
                     }
                 }}
+                data-testid={`${data.title} complete`}
             />
             <Typography component="p" fontWeight={500}>
                 {data.title}
@@ -70,6 +71,7 @@ function TodoItem({ data }: TodoItemProps) {
                     size="small"
                     component={Link}
                     href={`/${data._id}/edit`}
+                    data-testid={`${data.title} edit`}
                 >
                     <Typography variant="c2">Edit</Typography>
                 </Button>
@@ -84,6 +86,7 @@ function TodoItem({ data }: TodoItemProps) {
                             toast("삭제에 실패했습니다");
                         }
                     }}
+                    data-testid={`${data.title} delete`}
                 >
                     <Typography variant="c2">Delete</Typography>
                 </Button>
