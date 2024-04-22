@@ -3,6 +3,10 @@
     flex-direction: column;
     gap: 4px;
 
+    &--hidden {
+        display: none;
+    }
+
     &__label {
         @include typography(c1);
     }
