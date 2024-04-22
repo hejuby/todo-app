@@ -6,15 +6,13 @@ interface TodoFilter {
     limit?: number;
 }
 
-export async function getTodoList(filter: TodoFilter = {}) {
+export async function getTodoList({ page = 1, limit = 100 }: TodoFilter = {}) {
     try {
         await connectDB();
 
-        const page = filter.page ?? 1;
-        const limit = filter.limit ?? 10;
         const skip = (page - 1) * limit;
 
-        const todos = await Todo.find<TodoDocument>().skip(skip).limit(limit);
+        const todos = await Todo.find<TodoDocument>({}).skip(skip).limit(limit);
         const results = todos.length;
 
         return {
