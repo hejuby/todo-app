@@ -55,7 +55,10 @@ function TodoItem({ data }: TodoItemProps) {
                     <Typography
                         component="time"
                         variant="c2"
-                        className={cx("__due")}
+                        className={cx(
+                            "__due",
+                            endDate < new Date() && "__due--overdue"
+                        )}
                         dateTime={endDate.toISOString()}
                     >
                         {formatDate(endDate, "MM/dd")}

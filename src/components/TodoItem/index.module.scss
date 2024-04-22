@@ -9,4 +9,10 @@
         margin-left: 0.25rem;
         margin-right: auto;
     }
+
+    &__due {
+        &--overdue {
+            text-decoration: line-through;
+        }
+    }
 }
