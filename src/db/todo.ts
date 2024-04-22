@@ -29,20 +29,20 @@ export async function getTodoList(filter: TodoFilter = {}) {
 }
 
 export async function createTodo(
-    title: string,
-    description = "",
-    priority = 0
+    data: Omit<TodoDocument, "createdAt" | "updatedAt" | "_id"> & {
+        _id?: string;
+    }
 ) {
     try {
+        console.log(data);
         await connectDB();
 
-        const todo = await Todo.create({ title, description, priority });
+        const todo = await Todo.create(data);
 
-        return {
-            todo,
-        };
+        return { todo };
     } catch (error) {
-        return { error };
+        console.error(error);
+        return { error: JSON.stringify(error) };
     }
 }
 
@@ -67,10 +67,12 @@ export async function getTodo(id: string) {
     }
 }
 
-export async function updateTodo(
-    id: string,
-    { title, completed }: { title?: string; completed?: boolean }
-) {
+export async function updateTodo({
+    _id: id,
+    ...data
+}: Omit<TodoDocument, "createdAt" | "updatedAt" | "_id"> & {
+    _id?: string;
+}) {
     try {
         await connectDB();
 
@@ -78,11 +80,7 @@ export async function updateTodo(
             return { error: "Todo not found" };
         }
 
-        const todo = await Todo.findByIdAndUpdate(
-            id,
-            { title, completed },
-            { new: true }
-        )
+        const todo = await Todo.findByIdAndUpdate(id, data, { new: true })
             .lean()
             .exec();
 
