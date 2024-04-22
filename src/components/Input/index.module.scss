@@ -1,0 +1,16 @@
+.input {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    &__label {
+        @include typography(c1);
+    }
+
+    &__input {
+        display: block;
+        padding: 8px;
+        border: 1px solid color(grayscale, 200);
+        border-radius: 8px;
+    }
+}
