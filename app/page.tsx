@@ -1,105 +1,21 @@
-import Image from "next/image";
+import { getTodoList } from "#db/todo";
+import TodoForm from "#templates/TodoForm";
 import classNames from "#utils/classNames";
 import styles from "./page.module.scss";
 
 const cx = classNames(styles);
 
-export default function Home() {
+export default async function Home() {
+    const data = await getTodoList();
+
     return (
         <main className={cx("main")}>
-            <div className={cx("description")}>
-                <p>
-                    Get started by editing&nbsp;
-                    <code className={cx("code")}>app/page.tsx</code>
-                </p>
-                <div>
-                    <a
-                        href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        By{" "}
-                        <Image
-                            src="/vercel.svg"
-                            alt="Vercel Logo"
-                            className={cx("vercelLogo")}
-                            width={100}
-                            height={24}
-                            priority
-                        />
-                    </a>
-                </div>
-            </div>
-
-            <div className={cx("center")}>
-                <Image
-                    className={cx("logo")}
-                    src="/next.svg"
-                    alt="Next.js Logo"
-                    width={180}
-                    height={37}
-                    priority
-                />
-            </div>
-
-            <div className={cx("grid")}>
-                <a
-                    href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                    className={cx("card")}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <h2>
-                        Docs <span>-&gt;</span>
-                    </h2>
-                    <p>
-                        Find in-depth information about Next.js features and
-                        API.
-                    </p>
-                </a>
-
-                <a
-                    href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                    className={cx("card")}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <h2>
-                        Learn <span>-&gt;</span>
-                    </h2>
-                    <p>
-                        Learn about Next.js in an interactive course
-                        with&nbsp;quizzes!
-                    </p>
-                </a>
-
-                <a
-                    href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                    className={cx("card")}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <h2>
-                        Templates <span>-&gt;</span>
-                    </h2>
-                    <p>Explore starter templates for Next.js.</p>
-                </a>
-
-                <a
-                    href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                    className={cx("card")}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <h2>
-                        Deploy <span>-&gt;</span>
-                    </h2>
-                    <p>
-                        Instantly deploy your Next.js site to a shareable URL
-                        with Vercel.
-                    </p>
-                </a>
-            </div>
+            <TodoForm />
+            <ul>
+                {data.todos?.map((todo) => (
+                    <div key={todo._id}>{todo.title}</div>
+                ))}
+            </ul>
         </main>
     );
 }
