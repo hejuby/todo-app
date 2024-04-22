@@ -14,8 +14,6 @@ export default async function Home() {
         { next: { tags: [TODO_API_TAG] } }
     );
 
-    console.log(data?.todos);
-
     return (
         <main className={cx("main")}>
             <TodoForm />
