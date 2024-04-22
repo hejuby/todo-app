@@ -1,4 +1,5 @@
 import Todo, { TodoDocument } from "#models/Todo";
+import to from "#utils/awaitTo";
 import connectDB from "./connect";
 
 interface TodoFilter {
@@ -7,23 +8,28 @@ interface TodoFilter {
 }
 
 export async function getTodoList({ page = 1, limit = 100 }: TodoFilter = {}) {
-    try {
-        await connectDB();
+    const [dbConnectionError] = await to(connectDB());
 
-        const skip = (page - 1) * limit;
+    if (dbConnectionError) {
+        return { error: dbConnectionError };
+    }
 
-        const todos = await Todo.find<TodoDocument>({}).skip(skip).limit(limit);
-        const results = todos.length;
+    const skip = (page - 1) * limit;
+    const [error, todos] = await to(
+        Todo.find<TodoDocument>({}).skip(skip).limit(limit)
+    );
 
-        return {
-            todos,
-            page,
-            limit,
-            results,
-        };
-    } catch (error) {
+    if (error) {
+        console.error(error);
         return { error };
     }
+
+    return {
+        todos,
+        page,
+        limit,
+        results: todos.length,
+    };
 }
 
 export async function createTodo(
@@ -31,38 +37,41 @@ export async function createTodo(
         _id?: string;
     }
 ) {
-    try {
-        console.log(data);
-        await connectDB();
+    const [dbConnectionError] = await to(connectDB());
 
-        const todo = await Todo.create(data);
-
-        return { todo };
-    } catch (error) {
-        console.error(error);
-        return { error: JSON.stringify(error) };
+    if (dbConnectionError) {
+        return { error: dbConnectionError };
     }
+
+    const [error, todo] = await to(Todo.create(data));
+
+    if (error) {
+        console.error(error);
+        return { error };
+    }
+
+    return { todo };
 }
 
 export async function getTodo(id: string) {
-    try {
-        await connectDB();
+    const [dbConnectionError] = await to(connectDB());
 
-        if (!id) {
-            return { error: "Todo not found" };
-        }
+    if (dbConnectionError) {
+        return { error: dbConnectionError };
+    }
 
-        const todo = await Todo.findById<TodoDocument>(id);
-        if (todo) {
-            return {
-                todo,
-            };
-        } else {
-            return { error: "Todo not found" };
-        }
-    } catch (error) {
+    const [error, todo] = await to(Todo.findById<TodoDocument>(id));
+
+    if (error) {
+        console.error(error);
         return { error };
     }
+
+    if (todo) {
+        return { todo };
+    }
+
+    return { error: "Todo not found" };
 }
 
 export async function updateTodo({
@@ -73,45 +82,53 @@ export async function updateTodo({
         _id?: string;
     }
 >) {
-    try {
-        await connectDB();
+    const [dbConnectionError] = await to(connectDB());
 
-        if (!id) {
-            return { error: "Todo not found" };
-        }
+    if (dbConnectionError) {
+        return { error: dbConnectionError };
+    }
 
-        const todo = await Todo.findByIdAndUpdate(id, data, { new: true })
-            .lean()
-            .exec();
+    if (!id) {
+        return { error: "Todo not found" };
+    }
 
-        if (todo) {
-            return {
-                todo,
-            };
-        } else {
-            return { error: "Todo not found" };
-        }
-    } catch (error) {
+    const [error, todo] = await to(
+        Todo.findByIdAndUpdate(id, data, { new: true })
+    );
+
+    if (error) {
+        console.error(error);
         return { error };
     }
+
+    if (todo) {
+        return { todo };
+    }
+
+    return { error: "Todo not found" };
 }
 
 export async function deleteTodo(id: string) {
-    try {
-        await connectDB();
+    const [dbConnectionError] = await to(connectDB());
 
-        if (!id) {
-            return { error: "Todo not found" };
-        }
+    if (dbConnectionError) {
+        return { error: dbConnectionError };
+    }
 
-        const todo = await Todo.findByIdAndDelete(id).exec();
+    if (!id) {
+        return { error: "Todo not found" };
+    }
 
-        if (todo) {
-            return {};
-        } else {
-            return { error: "Todo not found" };
-        }
-    } catch (error) {
+    const [error, todo] = await to(Todo.findByIdAndDelete(id).exec());
+
+    if (error) {
+        console.error(error);
         return { error };
     }
+
+    if (todo) {
+        return { todo };
+    }
+
+    return { error: "Todo not found" };
 }

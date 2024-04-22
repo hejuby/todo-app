@@ -10,6 +10,7 @@ import Checkbox from "#components/Checkbox";
 import Typography from "#components/Typography";
 import classNames from "#utils/classNames";
 import toast from "#utils/toast";
+import to from "#utils/awaitTo";
 import styles from "./index.module.scss";
 
 export interface TodoItemProps {
@@ -30,12 +31,16 @@ function TodoItem({ data }: TodoItemProps) {
                     const nextState = !done;
                     setDone(nextState);
 
-                    try {
-                        await modifyCompleteStateFromTodo(data._id, !done);
-                    } catch {
-                        toast("상태 변경에 실패했습니다");
-                        setDone(!nextState);
+                    const [error] = await to(
+                        modifyCompleteStateFromTodo(data._id, nextState)
+                    );
+
+                    if (!error) {
+                        return;
                     }
+
+                    toast("상태 변경에 실패했습니다");
+                    setDone(!nextState);
                 }}
                 data-testid={`${data.title} complete`}
             />
@@ -80,11 +85,13 @@ function TodoItem({ data }: TodoItemProps) {
                     variant="text"
                     size="small"
                     onClick={async () => {
-                        try {
-                            await removeTodo(data._id);
-                        } catch {
-                            toast("삭제에 실패했습니다");
+                        const [error] = await to(removeTodo(data._id));
+
+                        if (!error) {
+                            return;
                         }
+
+                        toast("삭제에 실패했습니다");
                     }}
                     data-testid={`${data.title} delete`}
                 >
