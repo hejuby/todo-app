@@ -21,7 +21,7 @@ export async function getTodoList({ page = 1, limit = 100 }: TodoFilter = {}) {
 
     if (error) {
         console.error(error);
-        return { error };
+        return { error: error.message };
     }
 
     return {
@@ -40,7 +40,7 @@ export async function createTodo(
     const [dbConnectionError] = await to(connectDB());
 
     if (dbConnectionError) {
-        return { error: dbConnectionError };
+        return { error: dbConnectionError.message };
     }
 
     const [error, todo] = await to(Todo.create(data));
@@ -57,7 +57,7 @@ export async function getTodo(id: string) {
     const [dbConnectionError] = await to(connectDB());
 
     if (dbConnectionError) {
-        return { error: dbConnectionError };
+        return { error: dbConnectionError.message };
     }
 
     const [error, todo] = await to(Todo.findById<TodoDocument>(id));
@@ -85,7 +85,7 @@ export async function updateTodo({
     const [dbConnectionError] = await to(connectDB());
 
     if (dbConnectionError) {
-        return { error: dbConnectionError };
+        return { error: dbConnectionError.message };
     }
 
     if (!id) {
@@ -98,7 +98,7 @@ export async function updateTodo({
 
     if (error) {
         console.error(error);
-        return { error };
+        return { error: error.message };
     }
 
     if (todo) {
@@ -112,7 +112,7 @@ export async function deleteTodo(id: string) {
     const [dbConnectionError] = await to(connectDB());
 
     if (dbConnectionError) {
-        return { error: dbConnectionError };
+        return { error: dbConnectionError.message };
     }
 
     if (!id) {
@@ -123,7 +123,7 @@ export async function deleteTodo(id: string) {
 
     if (error) {
         console.error(error);
-        return { error };
+        return { error: error.message };
     }
 
     if (todo) {

@@ -12,7 +12,6 @@ const cx = classNames(styles, "input");
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
     ({ label, error, ...props }, ref) => {
-        console.log(props.name, props);
         return (
             <label
                 className={cx(

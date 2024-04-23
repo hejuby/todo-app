@@ -3,6 +3,7 @@
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { createTodo, deleteTodo, updateTodo } from "#db/todo";
+import to from "#utils/awaitTo";
 import { TODO_API_TAG } from "#constants";
 
 const todoSchema = z.object({
@@ -19,7 +20,7 @@ export async function submitTodo(formData: z.infer<typeof todoSchema>) {
     if (!validatedFields.success) {
         console.log("FAILED", validatedFields.error.flatten().fieldErrors);
         return {
-            error: validatedFields.error.flatten().fieldErrors,
+            message: validatedFields.error.flatten().fieldErrors,
         };
     }
 
@@ -28,21 +29,34 @@ export async function submitTodo(formData: z.infer<typeof todoSchema>) {
     if (id) {
         await updateTodo({ _id: id, ...data });
         revalidateTag(TODO_API_TAG);
-        return;
+        return { message: "Todo updated" };
     }
 
     await createTodo(data);
     revalidateTag(TODO_API_TAG);
+    return { message: "Todo created" };
 }
 
 export async function removeTodo(id: string) {
-    await deleteTodo(id);
+    const [error, result] = await to(deleteTodo(id));
+
+    if (error || result?.error) {
+        return { message: error?.message || result?.error };
+    }
+
     revalidateTag(TODO_API_TAG);
+    return { message: "Todo deleted" };
 }
 
 export async function modifyCompleteStateFromTodo(
     id: string,
     completed: boolean
 ) {
-    await updateTodo({ _id: id, completed });
+    const [error, result] = await to(updateTodo({ _id: id, completed }));
+
+    if (error || result?.error) {
+        return { message: error?.message || result?.error };
+    }
+
+    return { message: "Todo updated" };
 }
