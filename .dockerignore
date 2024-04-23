@@ -1,0 +1,12 @@
+.github
+.changeset
+**/node_modules
+node_modules
+**/Dockerfile
+docker-compose.yml
+cspell.json
+README.md
+/e2e
+/db
+/config
+/test-results
