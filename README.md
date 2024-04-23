@@ -49,8 +49,6 @@ bun dev
 
 위와 같은 순서로 진행됩니다.
 
-시간상 진행하지 못하였으나, form data를 관리하는 hook을 추가하여 보다 가독성 높은 코드를 제작할 수 있을 것으로 보입니다.
-
 ![Todo 목록](https://cdn.discordapp.com/attachments/1231934756824809502/1231934805302710343/image.png?ex=6638c3b1&is=66264eb1&hm=aea5f845519b59d5636d83ab94bc330bbc597718f18c8d05732d75c0d3ef7814&)
 
 - 상단의 form에서 추가한 데이터를 `date-fns` 등의 라이브러리를 통해 가공하여 출력합니다.
