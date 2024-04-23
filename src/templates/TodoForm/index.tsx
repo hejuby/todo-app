@@ -1,13 +1,16 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef } from "react";
 import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { submitTodo } from "app/actions";
 import Button from "#components/Button";
 import Input from "#components/Input";
 import Typography from "#components/Typography";
 import classNames from "#utils/classNames";
+import { TodoPriority } from "#constants";
 import styles from "./index.module.scss";
 
 export interface TodoFormProps {
@@ -17,11 +20,18 @@ export interface TodoFormProps {
 const cx = classNames(styles, "todo-form");
 
 const todoSchema = z.object({
-    title: z.string(),
+    title: z.string().min(1, "제목을 입력해 주세요."),
     description: z.string().optional(),
     _id: z.string().optional(),
     endDate: z.date().optional(),
-    priority: z.number(),
+    priority: z.preprocess(
+        (x) => x ?? TodoPriority.Minimum,
+        z.coerce
+            .number()
+            .int()
+            .min(TodoPriority.Minimum, "0보다 작은 값은 입력할 수 없어요.")
+            .max(TodoPriority.Maximum, "5보다 큰 값은 입력할 수 없어요.")
+    ),
 });
 
 function TodoForm({ initialData }: TodoFormProps) {
@@ -38,78 +48,61 @@ function TodoForm({ initialData }: TodoFormProps) {
             },
         [initialData]
     );
-    const [data, setData] = useState<z.infer<typeof todoSchema>>({
-        ...initialState,
-    });
+    const { handleSubmit, register, reset, formState, watch, setValue } =
+        useForm({
+            resolver: zodResolver(todoSchema),
+            defaultValues: initialState,
+        });
 
     return (
         <form
             className={cx()}
-            action={async () => {
-                await submitTodo(data);
+            action={async () =>
+                handleSubmit(async (data) => {
+                    await submitTodo(data);
 
-                if (initialData) {
-                    router.back();
-                } else {
-                    setData({ ...initialState });
-                }
-            }}
+                    if (initialData) {
+                        router.back();
+                    } else {
+                        reset();
+                    }
+                })()
+            }
             ref={formRef}
         >
             <Typography variant="h1" component="h1" fontWeight={700}>
                 What&apos;s on your mind?
             </Typography>
             <Input
-                name="title"
                 placeholder="Add title"
                 label="Todo *"
                 required
-                value={data.title}
-                onChange={({ currentTarget }) => {
-                    setData((prev) => ({
-                        ...prev,
-                        title: currentTarget.value,
-                    }));
-                }}
+                {...register("title", { required: true })}
+                error={formState.errors.title?.message}
             />
             <Input
-                name="description"
                 placeholder="Add description"
                 label="Description"
-                value={data.description}
-                onChange={({ currentTarget }) => {
-                    setData((prev) => ({
-                        ...prev,
-                        description: currentTarget.value,
-                    }));
-                }}
+                {...register("description")}
+                error={formState.errors.description?.message}
             />
             <Input
-                name="endDate"
                 type="date"
                 label="Due"
-                value={data.endDate?.toISOString().split("T")[0] || ""}
-                onChange={({ currentTarget }) => {
-                    setData((prev) => ({
-                        ...prev,
-                        endDate: new Date(currentTarget.value),
-                    }));
+                value={watch("endDate")?.toISOString().split("T")[0]}
+                onChange={({ currentTarget: { value } }) => {
+                    setValue("endDate", value ? new Date(value) : undefined);
                 }}
             />
             <Input
                 label="Priority"
                 type="number"
-                name="priority"
-                min="0"
-                max="5"
                 step="1"
-                value={data.priority}
-                onChange={({ currentTarget }) => {
-                    setData((prev) => ({
-                        ...prev,
-                        priority: parseInt(currentTarget.value, 10),
-                    }));
-                }}
+                {...register("priority", {
+                    min: TodoPriority.Minimum,
+                    max: TodoPriority.Maximum,
+                })}
+                error={formState.errors.priority?.message}
             />
             <Input type="hidden" name="_id" hidden />
             <Button type="submit">Add</Button>
