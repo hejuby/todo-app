@@ -1,4 +1,5 @@
 .input {
+    $self: &;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -16,5 +17,15 @@
         padding: 8px;
         border: 1px solid color(grayscale, 200);
         border-radius: 8px;
+
+        @at-root #{$self}--error & {
+            border-color: color(red);
+        }
+    }
+
+    &__error {
+        display: block;
+        margin-top: 0.25rem;
+        color: color(red);
     }
 }
