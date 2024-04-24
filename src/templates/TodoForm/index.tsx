@@ -79,12 +79,14 @@ function TodoForm({ initialData }: TodoFormProps) {
                 required
                 {...register("title", { required: true })}
                 error={formState.errors.title?.message}
+                data-testid="add-title"
             />
             <Input
                 placeholder="Add description"
                 label="Description"
                 {...register("description")}
                 error={formState.errors.description?.message}
+                data-testid="add-description"
             />
             <Input
                 type="date"
@@ -93,6 +95,7 @@ function TodoForm({ initialData }: TodoFormProps) {
                 onChange={({ currentTarget: { value } }) => {
                     setValue("endDate", value ? new Date(value) : undefined);
                 }}
+                data-testid="add-due"
             />
             <Input
                 label="Priority"
@@ -103,9 +106,12 @@ function TodoForm({ initialData }: TodoFormProps) {
                     max: TodoPriority.Maximum,
                 })}
                 error={formState.errors.priority?.message}
+                data-testid="add-priority"
             />
             <Input type="hidden" name="_id" hidden />
-            <Button type="submit">Add</Button>
+            <Button type="submit" data-testid="form-submit">
+                Add
+            </Button>
         </form>
     );
 }
