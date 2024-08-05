@@ -1,5 +1,9 @@
 # Todo app 예제
 
+[Marshall Ku](https://github.com/marshallku)님께서 개발하신 Todo app 예제입니다.
+
+원본 링크: [https://gitlab.marshallku.dev/marshallku/todo-app](https://gitlab.marshallku.dev/marshallku/todo-app) (현재 사용 불가)
+
 ## Tech stacks
 
 - TypeScript
